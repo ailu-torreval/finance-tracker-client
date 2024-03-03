@@ -7,7 +7,7 @@ export class Entry {
   currency: string;
   name: string;
   // comment: string;
-  //   category: Category;
+    category?: Category;
 
   constructor(
     id: number,
@@ -15,14 +15,14 @@ export class Entry {
     date: Date,
     currency: string,
     name: string,
-    categoryId: number
-    // category?: Category
+    categoryId: number,
+    category?: Category
   ) {
     this.id = id;
     this.amount = amount;
     this.date = date;
     this.currency = currency;
     this.name = name;
-    // this.category = category;
+    this.category = category;
   }
 }

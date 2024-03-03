@@ -12,11 +12,7 @@ export default function CategoriesScreen() {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
-  const dispatch = useDispatch<AppDispatch>();
 
-  useEffect(() => {
-    dispatch(fetchCategories())
-  }, []);
   
   return (
     <View style={{marginTop: 20 }}>

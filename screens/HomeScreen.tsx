@@ -6,9 +6,11 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { fetchEntries } from "../store/entrySlice";
-import { EntriesAPI } from "../api/entriesAPI";
+import { FAB } from '@rneui/themed';
+import { StyleSheet } from 'react-native';
+import { fetchCategories } from "../store/categorySlice";
 
-type Props = NativeStackScreenProps<RootStackParamList, "Home">;
+type Props = NativeStackScreenProps<RootStackParamList, "Entries">;
 
 type Entry = {
   id: number;
@@ -21,18 +23,19 @@ type Entry = {
 
 export default function HomeScreen({ navigation }: Props) {
   const entries = useSelector((state: RootState) => state.entries.entries);
+
   // const [entries, setEntries] = useState<Entry[]>([]);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     dispatch(fetchEntries());
+    dispatch(fetchCategories())
   }, []);
 
   // const entries1 = [25, 30, 45, 23, 456];
 
   return (
-    <View>
-      <Text>Home Screen</Text>
+    <View style={styles.view}>
       <FlatList
         data={entries}
         renderItem={({ item }) => (
@@ -43,11 +46,11 @@ export default function HomeScreen({ navigation }: Props) {
             </Text>
             <Button
               onPress={() =>
-                navigation.navigate("EditEntry", { entryId: Number(item) })
+                navigation.navigate("EditEntry", { entryId: Number(item.id) })
               }
               title="Edit Entry"
               color="#841584"
-              accessibilityLabel="Learn more about this purkple buutton"
+              accessibilityLabel="Learn more about this purple buutton"
             />
           </View>
         )}
@@ -55,6 +58,33 @@ export default function HomeScreen({ navigation }: Props) {
         contentContainerStyle={{ backgroundColor: "lightgrey" }}
         style={{ backgroundColor: "lightgrey" }}
       />
+            <FAB
+  
+        icon={{ name: 'add', color: 'white' }}
+        placement="right"
+        size="large"
+      />
+
+    <FAB
+      style={{ width: "80%", margin: 20 }}
+      placement="right"
+      size="small"
+      title="Add Entry"
+      color="red"
+      icon={{ name: "add", color: "#fff" }}
+    />
     </View>
   );
 }
+const styles = StyleSheet.create({
+  view: {
+    flex:1
+  },
+  baseText: {
+    fontFamily: 'Cochin',
+  },
+  titleText: {
+    fontSize: 20,
+    fontWeight: 'bold',
+  },
+});

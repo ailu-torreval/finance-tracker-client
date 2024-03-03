@@ -12,7 +12,7 @@ import { store } from "./store/store";
 import { Provider } from "react-redux";
 
 export type RootStackParamList = {
-  Home: undefined;
+  Entries: undefined;
   EditEntry: { entryId: number };
   DeleteEntry: { entryId: number };
   EntryList: undefined;
@@ -24,7 +24,7 @@ const Tab = createBottomTabNavigator();
 const EntryStackNavigator = () => {
   return (
     <Stack.Navigator>
-      <Stack.Screen name="Home" component={HomeScreen} />
+      <Stack.Screen name="Entries" component={HomeScreen} />
       <Stack.Screen name="EditEntry" component={EditEntry} />
       <Stack.Screen name="DeleteEntry" component={DeleteEntry} />
       <Stack.Screen name="EntryList" component={EntryList} />
@@ -42,7 +42,7 @@ export default function App() {
           tabBarIcon: ({ focused, color, size }) => {
             let iconName;
 
-            if (route.name === "Home1") {
+            if (route.name === "Home") {
               iconName ="home";
             } else if (route.name === "Category") {
               iconName = "list";
@@ -55,7 +55,7 @@ export default function App() {
           tabBarInactiveTintColor: 'gray',
         })}
       >
-        <Tab.Screen name="Home1" component={EntryStackNavigator} />
+        <Tab.Screen name="Home" component={EntryStackNavigator} />
         <Tab.Screen name="Category" component={CategoriesScreen} />
       </Tab.Navigator>
 

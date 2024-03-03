@@ -14,6 +14,15 @@ export class EntriesAPI {
     }
   }
 
+  static async fetchEntry(id: string) {
+    try {
+      const response = await axios.get(this.baseUrl + "/" + id);
+      return response.data;
+    } catch (error) {
+      console.log("error fetching entry", error);
+    }
+  }
+
 
 
   static async createEntry(entry: CreateEntryDTO) {
