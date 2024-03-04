@@ -1,4 +1,4 @@
-import { View, Text, Button, FlatList } from "react-native";
+import { View, Text, Button, FlatList, Pressable } from "react-native";
 import { useEffect, useState } from "react";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "../App";
@@ -9,17 +9,11 @@ import { fetchEntries } from "../store/entrySlice";
 import { FAB } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import { fetchCategories } from "../store/categorySlice";
+import Icon from "react-native-vector-icons/FontAwesome5";
+import { Entry } from "../entities/entry";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Entries">;
 
-type Entry = {
-  id: number;
-  amount: number;
-  date: Date;
-  currency: string;
-  name: string;
-  comment: string;
-};
 
 export default function HomeScreen({ navigation }: Props) {
   const entries = useSelector((state: RootState) => state.entries.entries);
@@ -39,20 +33,12 @@ export default function HomeScreen({ navigation }: Props) {
       <FlatList
         data={entries}
         renderItem={({ item }) => (
-          <View>
-            <Text>
-              {item.name}
-              {item.id}
-            </Text>
-            <Button
-              onPress={() =>
-                navigation.navigate("EditEntry", { entryId: Number(item.id) })
-              }
-              title="Edit Entry"
-              color="#841584"
-              accessibilityLabel="Learn more about this purple buutton"
-            />
-          </View>
+          <Item
+            entry={item}
+            action={() =>
+              navigation.navigate("EditEntry", { entryId: Number(item.id) })
+            }
+          />
         )}
         keyExtractor={(item) => item.id.toString()}
         contentContainerStyle={{ backgroundColor: "lightgrey" }}
@@ -60,6 +46,7 @@ export default function HomeScreen({ navigation }: Props) {
       />
       <FAB
         icon={{ name: "add", color: "white" }}
+        onPress={() => navigation.navigate("EditEntry", { entryId: 0 })}
         placement="right"
         size="large"
         color="#568bff"
@@ -67,8 +54,68 @@ export default function HomeScreen({ navigation }: Props) {
     </View>
   );
 }
+
+type ItemProps = { entry: Entry; action: any };
+
+const Item = (props: ItemProps) => (
+<View style={[styles.item, props.entry.category && styles[`category${props.entry.category.id}` as keyof typeof styles]]}>
+  <View>
+    <Text>
+      {props.entry.name}
+    </Text>
+    <Text>{props.entry.amount} kr.</Text>
+  </View>
+    <Pressable style={styles.iconBtn} onPress={props.action}>
+      <Icon name="pen" />
+    </Pressable>
+  </View>
+);
+
 const styles = StyleSheet.create({
   view: {
     flex: 1,
+  },
+  iconBtn: {
+    borderRadius: 20,
+    backgroundColor: "white",
+    padding: 12,
+  },
+  item: {
+    display: "flex",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginVertical: 5,
+    padding: 8,
+  },
+  category1: {
+    backgroundColor: "#ffd1dc" // pastel pink
+  },
+  category2: {
+    backgroundColor: "#ffd6d1" // pastel green
+  },
+  category3: {
+    backgroundColor: "#d1d1ff" // pastel blue
+  },
+  category4: {
+    backgroundColor: "#ffd1d1" // pastel red
+  },
+  category5: {
+    backgroundColor: "#d1ffd6" // pastel mint
+  },
+  category6: {
+    backgroundColor: "#d1ffd1" // pastel peach
+  },
+  category7: {
+    backgroundColor: "#d6d1ff" // pastel lavender
+  },
+  category8: {
+    backgroundColor: "#d1fff6" // pastel aqua
+  },
+  category9: {
+    backgroundColor: "#f6d1ff" // pastel purple
+  },
+  category10: {
+    backgroundColor: "#ffd1f6" // pastel magenta
   },
 });

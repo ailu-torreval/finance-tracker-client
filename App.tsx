@@ -13,8 +13,6 @@ import { Provider } from "react-redux";
 export type RootStackParamList = {
   Entries: undefined;
   EditEntry: { entryId: number };
-  DeleteEntry: { entryId: number };
-  EntryList: undefined;
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -55,11 +53,6 @@ export default function App() {
         <Tab.Screen name="Home" component={EntryStackNavigator} />
         <Tab.Screen name="Category" component={CategoriesScreen} />
       </Tab.Navigator>
-
-      {/* // <View style={styles.container}>
-      //   <Text>Open up App.tsx to start working on your app!</Text>
-      //   <StatusBar style="auto" />
-      // </View> */}
     </NavigationContainer>
     </Provider>
   );

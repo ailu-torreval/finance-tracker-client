@@ -19,7 +19,7 @@ import { ButtonGroup, ListItem } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
-import { deleteEntry, updateEntry } from "../store/entrySlice";
+import { createEntry, deleteEntry, updateEntry } from "../store/entrySlice";
 import { EntryDTO } from "../entities/entryDTO";
 
 type Props = NativeStackScreenProps<RootStackParamList, "EditEntry">;
@@ -52,7 +52,11 @@ export default function EditEntry({ route, navigation }: Props) {
         console.log(error);
       }
     }
-    getEntry();
+    if (entryId !== 0) {
+      getEntry();
+    } else {
+      setEntry({ ...entry, date: new Date(), currency: "DKK" });
+    }
   }, []);
 
   function deleteEntryById() {
@@ -61,8 +65,8 @@ export default function EditEntry({ route, navigation }: Props) {
     navigation.navigate("Entries");
   }
 
-  function editEntry() {
-    if (entry.category?.id) {
+  function handleEntry() {
+    if (entry.category?.id && entry.amount && entry.currency && entry.date && entry.name) {
       console.log(entry.amount, isIncome);
 
       isIncome === 0
@@ -77,9 +81,15 @@ export default function EditEntry({ route, navigation }: Props) {
         entry.category?.id
       );
 
-      dispatch(updateEntry({ entry: entryDto, id: entry.id.toString() }));
+      if(entryId === 0) {
+        dispatch(createEntry(entryDto));
+      } else {
+        dispatch(updateEntry({ entry: entryDto, id: entry.id.toString() }));
+      }
 
       navigation.navigate("Entries");
+    } else {
+      Alert.alert("Please fill all the fields. Remember to choose a category.")
     }
   }
 
@@ -190,8 +200,9 @@ export default function EditEntry({ route, navigation }: Props) {
                 setExpanded(!expanded);
               }}
               bottomDivider
+              containerStyle={styles[`category${cat.id}` as keyof typeof styles]}
             >
-              <ListItem.Content>
+              <ListItem.Content >
                 <ListItem.Title>{cat.name}</ListItem.Title>
               </ListItem.Content>
               <ListItem.Chevron />
@@ -199,21 +210,17 @@ export default function EditEntry({ route, navigation }: Props) {
           ))}
         </ListItem.Accordion>
       </View>
+      <View  style={entryId !== 0 && styles.buttonGrid}>
+        {entryId !== 0 && (
+          <Pressable style={styles.deleteBtn} onPress={deleteEntryById}>
+            <Icon style={styles.white} name="trash" />
+            <Text style={styles.white}>Delete Entry</Text>
+          </Pressable>
+        )}
 
-      <View style={styles.buttonGrid}>
-        <Pressable style={styles.deleteBtn} onPress={deleteEntryById}>
-          <Icon style={styles.white} name="trash" />
-          <Text style={styles.white}>Delete Entry</Text>
-        </Pressable>
-        {/* <Button
-        onPress={() => navigation.navigate("DeleteEntry", { entryId: 123 })}
-        title="Delete Entry"
-        color="#841584"
-        accessibilityLabel="Learn more about this purple button"
-      /> */}
-        <Pressable style={styles.acceptBtn} onPress={editEntry}>
+        <Pressable style={styles.acceptBtn} onPress={handleEntry}>
           <Icon style={styles.white} name="check" />
-          <Text style={styles.white}>Update Entry</Text>
+          <Text style={styles.white}>{ entryId === 0 ? "Create Entry" :"Update Entry"}</Text>
         </Pressable>
       </View>
     </View>
@@ -284,4 +291,34 @@ const styles = StyleSheet.create({
     padding: 1,
     fontSize: 16,
   },
+  category1: {
+    backgroundColor: "#ffd1dc" // pastel pink
+  },
+  category2: {
+    backgroundColor: "#ffd6d1" // pastel green
+  },
+  category3: {
+    backgroundColor: "#d1d1ff" // pastel blue
+  },
+  category4: {
+    backgroundColor: "#ffd1d1" // pastel red
+  },
+  category5: {
+    backgroundColor: "#d1ffd6" // pastel mint
+  },
+  category6: {
+    backgroundColor: "#d1ffd1" // pastel peach
+  },
+  category7: {
+    backgroundColor: "#d6d1ff" // pastel lavender
+  },
+  category8: {
+    backgroundColor: "#d1fff6" // pastel aqua
+  },
+  category9: {
+    backgroundColor: "#f6d1ff" // pastel purple
+  },
+  category10: {
+    backgroundColor: "#ffd1f6" // pastel magenta
+  }
 });
