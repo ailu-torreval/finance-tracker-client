@@ -19,6 +19,8 @@ import { ButtonGroup, ListItem } from "@rneui/themed";
 import { StyleSheet } from "react-native";
 import DateTimePicker from "react-native-ui-datepicker";
 import Icon from "react-native-vector-icons/FontAwesome5";
+import { deleteEntry, updateEntry } from "../store/entrySlice";
+import { EntryDTO } from "../entities/entryDTO";
 
 type Props = NativeStackScreenProps<RootStackParamList, "EditEntry">;
 
@@ -31,6 +33,7 @@ export default function EditEntry({ route, navigation }: Props) {
   const categories = useSelector(
     (state: RootState) => state.categories.categories
   );
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     async function getEntry() {
@@ -52,15 +55,37 @@ export default function EditEntry({ route, navigation }: Props) {
     getEntry();
   }, []);
 
-  function deleteEntry() {
+  function deleteEntryById() {
     console.log("delete entry");
-    Alert.alert("Are you sure?");
+    dispatch(deleteEntry(entry.id.toString()));
+    navigation.navigate("Entries");
+  }
+
+  function editEntry() {
+    if (entry.category?.id) {
+      console.log(entry.amount, isIncome);
+
+      isIncome === 0
+        ? (entry.amount = Math.abs(entry.amount))
+        : (entry.amount = -Math.abs(entry.amount));
+
+      const entryDto = new EntryDTO(
+        entry.amount,
+        entry.date,
+        entry.currency,
+        entry.name,
+        entry.category?.id
+      );
+
+      dispatch(updateEntry({ entry: entryDto, id: entry.id.toString() }));
+
+      navigation.navigate("Entries");
+    }
   }
 
   return (
-    <View style={{ flex: 1, justifyContent: "space-between" }}>
+    <View style={{ flex: 1, justifyContent: "space-between", padding: 5 }}>
       <View>
-        <Text>Edit Entry {entryId} </Text>
         <Text>Title</Text>
         <TextInput
           style={styles.input}
@@ -75,7 +100,7 @@ export default function EditEntry({ route, navigation }: Props) {
           onChangeText={(value) =>
             setEntry((prevState) => ({ ...prevState, amount: Number(value) }))
           }
-          value={entry.amount ? entry.amount.toString() : ""}
+          value={entry.amount ? Math.abs(entry.amount).toString() : ""}
           keyboardType="numeric"
         />
 
@@ -176,7 +201,7 @@ export default function EditEntry({ route, navigation }: Props) {
       </View>
 
       <View style={styles.buttonGrid}>
-        <Pressable style={styles.deleteBtn} onPress={deleteEntry}>
+        <Pressable style={styles.deleteBtn} onPress={deleteEntryById}>
           <Icon style={styles.white} name="trash" />
           <Text style={styles.white}>Delete Entry</Text>
         </Pressable>
@@ -186,7 +211,7 @@ export default function EditEntry({ route, navigation }: Props) {
         color="#841584"
         accessibilityLabel="Learn more about this purple button"
       /> */}
-        <Pressable style={styles.acceptBtn} onPress={deleteEntry}>
+        <Pressable style={styles.acceptBtn} onPress={editEntry}>
           <Icon style={styles.white} name="check" />
           <Text style={styles.white}>Update Entry</Text>
         </Pressable>

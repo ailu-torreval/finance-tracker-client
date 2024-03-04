@@ -4,8 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import HomeScreen from "./screens/HomeScreen";
 import EditEntry from "./screens/EditEntry";
-import DeleteEntry from "./screens/DeleteEntry";
-import EntryList from "./screens/EntryList";
+
 import CategoriesScreen from "./screens/CategoriesScreen";
 import Icon from 'react-native-vector-icons/FontAwesome5';
 import { store } from "./store/store";
@@ -26,8 +25,6 @@ const EntryStackNavigator = () => {
     <Stack.Navigator>
       <Stack.Screen name="Entries" component={HomeScreen} />
       <Stack.Screen name="EditEntry" component={EditEntry} />
-      <Stack.Screen name="DeleteEntry" component={DeleteEntry} />
-      <Stack.Screen name="EntryList" component={EntryList} />
     </Stack.Navigator>
   );
 };
@@ -51,7 +48,7 @@ export default function App() {
             // You can return any component that you like here!
             return <Icon name={iconName || "home"} size={size} color={color} />;
           },
-          tabBarActiveTintColor: 'purple',
+          tabBarActiveTintColor: '#568bff',
           tabBarInactiveTintColor: 'gray',
         })}
       >

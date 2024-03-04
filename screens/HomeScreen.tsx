@@ -6,8 +6,8 @@ import axios from "axios";
 import { useSelector, useDispatch } from "react-redux";
 import { AppDispatch, RootState } from "../store/store";
 import { fetchEntries } from "../store/entrySlice";
-import { FAB } from '@rneui/themed';
-import { StyleSheet } from 'react-native';
+import { FAB } from "@rneui/themed";
+import { StyleSheet } from "react-native";
 import { fetchCategories } from "../store/categorySlice";
 
 type Props = NativeStackScreenProps<RootStackParamList, "Entries">;
@@ -29,7 +29,7 @@ export default function HomeScreen({ navigation }: Props) {
 
   useEffect(() => {
     dispatch(fetchEntries());
-    dispatch(fetchCategories())
+    dispatch(fetchCategories());
   }, []);
 
   // const entries1 = [25, 30, 45, 23, 456];
@@ -58,33 +58,17 @@ export default function HomeScreen({ navigation }: Props) {
         contentContainerStyle={{ backgroundColor: "lightgrey" }}
         style={{ backgroundColor: "lightgrey" }}
       />
-            <FAB
-  
-        icon={{ name: 'add', color: 'white' }}
+      <FAB
+        icon={{ name: "add", color: "white" }}
         placement="right"
         size="large"
+        color="#568bff"
       />
-
-    <FAB
-      style={{ width: "80%", margin: 20 }}
-      placement="right"
-      size="small"
-      title="Add Entry"
-      color="red"
-      icon={{ name: "add", color: "#fff" }}
-    />
     </View>
   );
 }
 const styles = StyleSheet.create({
   view: {
-    flex:1
-  },
-  baseText: {
-    fontFamily: 'Cochin',
-  },
-  titleText: {
-    fontSize: 20,
-    fontWeight: 'bold',
+    flex: 1,
   },
 });

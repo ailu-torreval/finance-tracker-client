@@ -1,6 +1,6 @@
 import { Category } from "./category";
 
-export class CreateEntryDTO {
+export class EntryDTO {
   amount: number;
   date: Date;
   currency: string;
@@ -13,7 +13,7 @@ export class CreateEntryDTO {
     date: Date,
     currency: string,
     name: string,
-    categoryId: number,
+    categoryId: number
   ) {
     this.amount = amount;
     this.date = date;
