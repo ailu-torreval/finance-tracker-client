@@ -37,7 +37,7 @@ export class EntriesAPI {
       const response = await axios.patch(this.baseUrl + "/" + id, entry);
       return response.data;
     } catch (error) {
-      console.log("error creating entry", error);
+      console.log("error updating entry", error);
     }
   }
 

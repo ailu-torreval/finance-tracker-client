@@ -1,5 +1,4 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit'
-import type { PayloadAction } from '@reduxjs/toolkit'
 import { Category } from '../entities/category'
 import { CategoriesAPI } from '../api/categoriesAPI'
 
@@ -28,38 +27,50 @@ export const fetchCategories = createAsyncThunk(
     },
   )
 
+  export const updateCategory = createAsyncThunk(
+    "updateCategory",
+    async ({ categoryName, id }: { categoryName: string; id: string }, thunkAPI) => {
+      return await CategoriesAPI.updateCategory(categoryName, id);
+    }
+  );
+  
+  export const deleteCategory = createAsyncThunk(
+    "deleteCategory",
+    async (id: string, thunkAPI) => {
+      return await CategoriesAPI.deleteCategory(id);
+    }
+  );
+
 
 
 export const categorySlice = createSlice({
   name: 'category',
   initialState,
   reducers: {
-    // decrement: (state) => {
-    //   state.value -= 1
-    // },
-    // incrementByAmount: (state, action: PayloadAction<number>) => {
-    //   state.value += action.payload
-    // },
   },
   extraReducers: (builder) => {
-    // Add reducers for additional action types here, and handle loading state as needed
     builder.addCase(fetchCategories.fulfilled, (state, action) => {
-      // Add user to the state array
       console.log("action.payload", action.payload);
       state.categories = action.payload;
-    //   state.entities.push(action.payload)
     }),
     builder.addCase(createCategory.fulfilled, (state, action) => {
-        // Add user to the state array
         console.log("action.payload", action.payload);
         state.categories.push(action.payload)
-      //   state.entities.push(action.payload)
-      })
+      }),
+      builder.addCase(updateCategory.fulfilled, (state, action) => {
+        state.categories = state.categories.map((category) =>
+          category.id === action.payload.id ? action.payload : category
+        );
+      });
+    builder.addCase(deleteCategory.fulfilled, (state, action) => {
+      console.log("deleete", typeof action.payload.id, action.payload);
+      state.categories = state.categories.filter(
+        (category) => category.id !== Number(action.payload.id)
+      );
+    });
 }
 })
 
-// Action creators are generated for each case reducer function
-// ACTIONS
 export const {  } = categorySlice.actions
 
 export default categorySlice.reducer
